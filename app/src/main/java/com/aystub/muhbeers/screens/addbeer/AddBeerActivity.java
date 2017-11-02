@@ -1,6 +1,7 @@
 package com.aystub.muhbeers.screens.addbeer;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +15,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RatingBar;
 import android.widget.Toolbar;
-
 import com.aystub.muhbeers.R;
 import com.aystub.muhbeers.data.Beer;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -23,8 +23,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
 
 
+@RuntimePermissions
 public class AddBeerActivity extends Activity implements View.OnClickListener{
 
     private FrameLayout addPhotoLayout;
@@ -50,26 +53,48 @@ public class AddBeerActivity extends Activity implements View.OnClickListener{
 
 
     private void init() {
-        findAllTheViews();
+        initInputLayouts();
         initCustomToolbar();
         initFirebaseStuff();
+        initPhotoCaptureLayout();
         initSaveActionClickListener();
     }
 
 
     private void initCustomToolbar() {
-        toolbar.setNavigationOnClickListener(this);
+        toolbar = findViewById(R.id.toolbar);
         setActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(this);
         getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 
-    private void findAllTheViews() {
-        addPhotoLayout = findViewById(R.id.add_photo_layout);
-        saveAction = findViewById(R.id.save);
+    private void initInputLayouts() {
         beerName = findViewById(R.id.beer_name_edit_text);
         ratingBar = findViewById(R.id.rating_bar);
-        toolbar = findViewById(R.id.toolbar);
+    }
+
+
+    private void initPhotoCaptureLayout() {
+        addPhotoLayout = findViewById(R.id.add_photo_layout);
+        addPhotoLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                takePhoto();
+            }
+        });
+    }
+
+
+    private void takePhoto() {
+        AddBeerActivityPermissionsDispatcher.launchCameraWithPermissionCheck(this);
+    }
+
+
+    @NeedsPermission(Manifest.permission.CAMERA)
+    void launchCamera() {
+//        Intent captureIntent = MediaUtils.getCameraCaptureIntent(this, BuildConfig.APPLICATION_ID);
+//        startActivityForResult(captureIntent, MediaUtils.CAPTURE_PHOTO_REQUEST_CODE);
     }
 
 
@@ -80,6 +105,7 @@ public class AddBeerActivity extends Activity implements View.OnClickListener{
 
 
     private void initSaveActionClickListener() {
+        saveAction = findViewById(R.id.save);
         saveAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,6 +142,6 @@ public class AddBeerActivity extends Activity implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        onBackPressed();
+        finish();
     }
 }
