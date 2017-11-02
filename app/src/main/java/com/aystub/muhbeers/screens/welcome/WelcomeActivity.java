@@ -30,6 +30,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class WelcomeActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
     private static final int RC_SIGN_IN = 1000;
+    private static final String TAG = "Welcome_Activity";
 
     private GoogleApiClient googleApiClient;
     private FirebaseAuth firebaseAuth;
@@ -71,6 +72,7 @@ public class WelcomeActivity extends AppCompatActivity implements GoogleApiClien
                 GoogleSignInAccount account = result.getSignInAccount();
                 authenticate(account);
             } else {
+                Log.e(TAG, "Google Auth Failed Did You Add Your SHA1 To The Firebase Console?");
                 showErrorSnackbar();
             }
         }
@@ -99,7 +101,7 @@ public class WelcomeActivity extends AppCompatActivity implements GoogleApiClien
                             startActivity(new Intent(WelcomeActivity.this, HomeActivity.class));
                             finish();
                         } else {
-                            Log.d("WELCOME_ACTIVITY", "Firebase Auth Failed: " + task.getException());
+                            Log.e(TAG, "Firebase Auth Failed: " + task.getException());
                             showErrorSnackbar();
                         }
                     }
@@ -114,7 +116,7 @@ public class WelcomeActivity extends AppCompatActivity implements GoogleApiClien
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d("WELCOME_ACTIVITY", "onConnectionFailed:" + connectionResult);
+        Log.e(TAG, "onConnectionFailed:" + connectionResult);
         showErrorSnackbar();
     }
 }
