@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">muhbeers</string>
+    <string name="muhbeers">🍻 Muh Beers 🍻</string>
+
+
+    <string name="onward">Onward</string>
+    <string name="beer_name">Name of beer</string>
+    <string name="add_beer">Add a beer</string>
+    <string name="save">Save</string>
+    <string name="sign_out">Sign out</string>
+
+
+    <string name="error_signing_in">Something went wrong while signing in</string>
+    <string name="error_writing_data">Something went wrong saving the data</string>
+</resources>
